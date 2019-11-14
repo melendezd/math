@@ -1,0 +1,172 @@
+\documentclass[12pt]{article}
+\usepackage[ top = 1in,
+           , bottom = 2in,
+           , left = 1in,
+           , right = 1in]
+           {geometry} 
+\usepackage{amsmath,amsthm,amssymb,amsfonts, enumitem, fancyhdr, color, comment, graphicx, environ,, euscript, wasysym}
+
+%special commmands
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\prob}{\mathsf{P}}
+\newcommand{\pr}[1]{\prob\left[#1\right]}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\congmod}[3]{#1 \equiv #2\ (\text{mod $#3$})}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+
+\pagestyle{fancy}
+\setlength{\headheight}{65pt}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{sol}
+    {\emph{Solution:}
+    }
+    {
+    $\square$
+    }
+\specialcomment{com}{ \color{blue} \textbf{Comment:} }{\color{black}} 
+\NewEnviron{probscore}{\marginpar{ \color{blue} \tiny Problem Score: \BODY \color{black} }}
+\newtheorem{lemma}{Lemma}
+
+
+\lhead{David Melendez}
+\rhead{A Computational Introduction to Number Theory and Algebra \\ by Victor Shoup \\
+Finite and Discrete Probability Distributions \\ \S8.1} 
+
+
+\begin{document}
+
+\begin{problem}{8.1}
+    Show that $\prob[\A\cap\B]\prob[\A\cup\B] \leq \prob[\A]P[\B]$
+\end{problem}
+\begin{sol}
+    Note that $\prob[\A] = \prob[\A\setminus\B] + \prob[\A\cap\B]$ and $\prob[\B] = \prob[\B\setminus\A] + \prob[\A\cap\B]$. We then have
+    \begin{align*}
+        \prob[\A]\prob[\B] &= (\prob[\A\setminus\B] + \prob[\A\cap\B])(\prob[\B\setminus\A] + \prob[\A\cap\B]) \\
+        &= \prob[\A\setminus\B]\prob[\B\setminus\A] 
+        + \prob[A\cap\B](\pr{\A\setminus\B + \pr[\A\cap\B} + \pr{\B\setminus\A}) \\
+        &= \prob[\A\setminus\B]\prob[\B\setminus\A] 
+        + \prob[A\cap\B]\pr{\A\cup\B} \\
+        &\leq \prob[A\cap\B]\pr{\A\cup\B},
+    \end{align*}
+    as desired.
+\end{sol}
+
+\begin{problem}{8.2}
+    Suppose $\A,\B,\C$ are events such that $\A\cap\overline{\C} = \B\cap\overline\C$. Show that \\$|\pr{\A} - \pr{\B}| \leq \pr{\C}$.
+\end{problem}
+\begin{sol}
+    Assume WLOG that $\pr{\A\cap\C} \geq \pr{\B\cap\C}$. We then have
+    \begin{align*}
+        |\pr{\A} - \pr{\B}| &= 
+        |(\pr{\A\setminus C} + \pr{\A\cap\C}) - (\pr{\B\setminus C} + \pr{\B\cap\C})| \\
+        &= |\pr{\A\cap\C} - \pr{\B\cap\C}| \\
+        &= \pr{\A\cap\C} - \pr{\B\cap\C} \\
+        &\leq \pr{\A\cap\C} \\
+        &\leq \pr{\C}. 
+    \end{align*}
+\end{sol}
+
+\begin{problem}{8.3}
+    Let $m$ be a positive integer, and let $\alpha(m)$ be the probability that a number chosen at random from $\{1,\dots,m\}$ is divisible by either $4,5$, or $6$. Write down an exact formula for $\alpha(m)$, and also show that $\alpha(m) = 14/30 + O(1/m)$.
+\end{problem}
+\begin{sol}
+    Let $\D_k$ denote the set of all integers $1\leq j\leq m$ such that $k|j$. We then have
+    \begin{align*}
+        \pr{\D_4\cup\D_5\cup\D_6}
+        &= \pr{D_4} + \pr{D_5} + \pr{D_6} - \pr{\D_4\cap\D_5} - \pr{\D_4\cap\D_6} 
+        - \pr{\D_5\cap\D_6} + \pr{\D_4\cap\D_5\cap\D_6} \\
+        &= \pr{D_4} + \pr{D_5} + \pr{D_6} - \pr{\D_{20}} - \pr{\D_{12}} 
+        - \pr{\D_{30}} + \pr{\D_{60}} \\
+        &= \frac{1}{m}\left( \floor{\frac{m}{4}} + \floor{\frac{m}{5}} + \floor{\frac{m}{6}} - \floor{\frac{m}{20}} - \floor{\frac{m}{12}} - \floor{\frac{m}{30}} + \floor{\frac{m}{60}} \right) \\
+        &= \frac{1}{m}\left( \frac{m}{4} + \frac{m}{5} + \frac{m}{6} - \frac{m}{20} - \frac{m}{12} - \frac{m}{30} + \frac{m}{60} + O(1)\right) \\
+        &= \frac{1}{m}\left( \frac{28m}{60} + O(1) \right) \\
+        &= \frac{1}{m}\left( \frac{28m}{60} + O(1) \right) \\
+        &= 14/30 + O(1)/m \\
+        &= 14/30 + O(1/m).
+    \end{align*}
+\end{sol}
+
+\begin{problem}{8.4}
+    Let $\{\A_i\}_{i\in I}$ be a finite family of events, where $n:=|I|$. For $m=\{0,\dots,n\}$, define 
+    \begin{equation*}
+        \alpha_m := \sum_{k=1}^m (-1)^{k-1} \sum_{\substack{J\subseteq I \\ |J|=k}}
+        \pr{\bigcap_{j\in J}\A_j}.
+    \end{equation*}
+    Also, define
+    \begin{equation*}
+        \alpha := \pr{\bigcup_{i\in I}\A_i}.
+    \end{equation*}
+    Show that $\alpha\leq \alpha_m$ if $m$ is odd and $\alpha\geq \alpha_m$ if $m$ is even.
+\end{problem}
+\begin{sol}
+    Before embarking on the proof, we will prove two lemmas.
+    \begin{lemma}
+        If $n\in\NN$, then 
+        \begin{align*}
+            \sum_{k=0}^n (-1)^k \binom{n}{k} = 0.
+        \end{align*}
+    \end{lemma}
+    \begin{proof}
+        By the binomial theorem, we have
+        \begin{align*}
+            0 &= (1-1)^n \\
+            &= \sum_{k=0}^n (-1)^k (1)^{n-1}\binom{n}{k} \\
+            &= \sum_{k=0}^n (-1)^k \binom{n}{k}.
+        \end{align*}
+    \end{proof}
+    \begin{lemma}
+        Let $n,m\in\NN$, and let
+        \begin{align*}
+            \beta_m = \sum_{k=0}^{m} (-1)^k \binom{n}{k}.
+        \end{align*}
+        \indent If $m$ is even, then $\beta_m \geq 0$. If $m$ is odd, then $\beta_m \leq 0$.
+    \end{lemma}
+    \begin{proof}
+        \indent We will proceed by induction. If $n=0$, then the result is trivial. \\
+        \indent Otherwise, suppose the result holds for some $n\in\NN$, and consider $\beta_m$. We have
+        \begin{align*}
+            \beta_m &= \sum_{k=0}^m (-1)^k \binom{n+1}{k} \\
+            &= \binom{n+1}{0} + \sum_{k=1}^m (-1)^k 
+            \left[ \binom{n}{k} + \binom{n}{k-1} \right] \\
+            &= 1 + \sum_{k=1}^m (-1)^k  \binom{n}{k}
+            + \sum_{k=1}^m (-1)^k \binom{n}{k-1} \\
+            &= 1 + \sum_{k=1}^m (-1)^k  \binom{n}{k}
+            + \sum_{k=1}^m (-1)^k \binom{n}{k-1} \\
+            &= \sum_{k=0}^m (-1)^k  \binom{n}{k}
+            + \sum_{k=0}^{m-1} (-1)^{k+1} \binom{n}{k} \\
+            &= \sum_{k=0}^m (-1)^k  \binom{n}{k}
+            - \sum_{k=0}^{m-1} (-1)^{k} \binom{n}{k} \\
+        \end{align*}
+        \indent If $m$ is even, we have by the induction hypothesis that the first term is nonnegative and that the second term is nonpositive (since $m-1$) is odd. Thus, in total, $\beta_m \geq 0$ when $m$ is odd. \\
+        \indent On the other hand, if $m$ is odd, we have by the induction hypothesis that the first term is nonpositive and that the second term is nonnegative (since $m-1$) is even. Thus, in total, $\beta_m \geq 0$ when $m$ is odd. \\
+        \indent Therefore, we have the result for all $n\in\NN$.
+    \end{proof}
+    \indent We now begin the proof of Bonferroni's inequalities. \\
+    \indent Our approach is to count how many times and with what coefficients an element \\$\omega\in\Omega := \bigcup_{i\in I} \A_i$ appears in $\alpha$ and in $\alpha_m$. Thus, for each $\omega\in\Omega$, let $I_\omega\subseteq I$ denote the set of all $i\in I$ such that $\omega\in \A_i$, and let $r_\omega = |I_\omega|$. \\
+    \indent First, observe that in the definition of $\alpha_m$, the probability $\pr{\omega}$ appears in the inner sum if and only if $J\subseteq I_\omega$. For $k\leq r_\omega$, there are exactly $\binom{r_\omega}{k}$ $k$-element subsets of $I_\omega$. We thus have
+    \begin{align*}
+        \alpha_m &= \sum_{\omega\in\Omega}\sum_{k=1}^{m} (-1)^{k-1} \binom{r_\omega}{k} \pr{\omega}.
+    \end{align*}
+    Note, then, that
+    \begin{align*}
+        \beta_m &:= \sum_{k=1}^m (-1)^{k-1} \binom{r_\omega}{k} \\
+        &= 1 - \sum_{k=0}^m (-1)^{k} \binom{r_\omega}{k},
+    \end{align*}
+    If $m$ is even, we have by Lemma 2 that $\beta_m \leq 1$. Multiplying my $\pr{\omega}$ and summing over all $\omega\in\Omega$, we find that
+    \begin{align*}
+        \sum_{\omega\in\Omega} \sum_{k=1}^m (-1)^{k-1} \binom{r_\omega}{k}\pr{\omega} \leq \sum_{\omega\in\Omega} \pr{\omega};
+    \end{align*}
+    that is, $\alpha_m \leq \alpha$ when $m$ is even. Similarly, we have $\alpha_m\geq \alpha$ when $m$ is odd, giving us the result.
+    \end{sol}
+\end{document}
